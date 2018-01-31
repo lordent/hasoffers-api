@@ -10,7 +10,7 @@ setup(
     author_email='vitent@gmail.com',
     packages=['hasoffers_api'],
     url='https://github.com/lordent/hasoffers-api',
-    requires=[
+    install_requires=[
         'multidimensional_urlencode',
         'aiohttp',
         'ujson',
