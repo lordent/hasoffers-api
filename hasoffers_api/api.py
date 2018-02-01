@@ -24,11 +24,21 @@ class FailedToHydrateRows(ApiError):
     pass
 
 
+class NetworkTokenIsNotAuthenticated(ApiError):
+    pass
+
+
+class IPIsNotWhiteListed(ApiError):
+    pass
+
+
 ERRORS = {
     'Invalid Authorization': InvalidAuthorization,
     'Missing required argument': MissingRequiredArgument,
     'API usage exceeded rate limit': APIUsageExceededRateLimit,
     'Failed to hydrate rows': FailedToHydrateRows,
+    'is not authenticated': NetworkTokenIsNotAuthenticated,
+    'is not white-listed': IPIsNotWhiteListed,
 }
 
 
