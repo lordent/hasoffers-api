@@ -54,7 +54,7 @@ class ApiRequest:
             yield await self
 
     async def api_call(self, url):
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(trust_env=True) as session:
             async with session.get(url) as response:
                 result = ujson.loads(await response.read())
 
@@ -82,12 +82,12 @@ class ApiMethod:
         self.name = name
 
     def __call__(self, params=None, auto_retry=False):
-        api_host = '%s.api.hasoffers.com' % self.api_controller.api.network
-        url = 'https://%s/Apiv3/json?NetworkToken=%s&Target=%s&Method=%s&' % (
-            api_host,
-            self.api_controller.api.apikey,
-            self.api_controller.name,
-            self.name,
+        url = 'https://%s/Apiv3/json' % '%s.api.hasoffers.com?' % self.api_controller.api.network
+        params = dict(
+            NetworkToken=self.api_controller.api.apikey,
+            Target=self.api_controller.name,
+            Method=self.name,
+            **(params or dict())
         )
         return ApiRequest(url, params, auto_retry=auto_retry)
 
