@@ -92,7 +92,7 @@ class ApiMethod:
         self.name = name
 
     def __call__(self, params=None, auto_retry=False):
-        url = 'https://%s/Apiv3/json' % '%s.api.hasoffers.com?' % self.api_controller.api.network
+        url = 'https://%s/Apiv3/json?' % '%s.api.hasoffers.com' % self.api_controller.api.network
         params = dict(
             NetworkToken=self.api_controller.api.apikey,
             Target=self.api_controller.name,
