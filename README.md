@@ -1,5 +1,7 @@
 # hasoffers_api: Async HasOffers . Network API driver
 
+![travis](https://travis-ci.org/lordent/hasoffers-api.svg?branch=master)
+
 ## HasOffers HTTP Network API Documentation
 
 Full documentation is available at https://developers.tune.com/network/ .
@@ -31,3 +33,7 @@ affiliate = await api.Affiliate.findById({'id': 1})
 
 ## Requirements
 - Python >= 3.6
+
+## Test
+
+$ tox 
