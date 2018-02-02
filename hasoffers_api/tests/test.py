@@ -60,6 +60,21 @@ async def usagelimit_handler(request):
     })
 
 
+async def paging_handler(request):
+    return web.json_response({
+        'response': {
+            'data': {
+                'page': 0,
+                'pageCount': 10,
+                'data': [
+                    'Done',
+                ],
+            },
+            'errorMessage': '',
+        },
+    })
+
+
 async def test_api_request(loop):
 
     builder = Api(network='network', apikey='apikey')
@@ -68,6 +83,7 @@ async def test_api_request(loop):
     app = web.Application()
     app.router.add_route('GET', '/done', done_handler)
     app.router.add_route('GET', '/usagelimit', usagelimit_handler)
+    app.router.add_route('GET', '/paging', paging_handler)
 
     host, port = '127.0.0.1', 8000
 
@@ -82,3 +98,18 @@ async def test_api_request(loop):
 
     with pytest.raises(APIUsageExceededRateLimit):
         await request
+
+    request = builder.Controller.Method({
+        'limit': 100,
+    })
+    request.url = 'http://{host}:{port}/paging?'.format(host=host, port=port)
+
+    pages = 10
+
+    async for results in request:
+        pages -= 1
+
+        for result in results:
+            assert result == 'Done'
+
+    assert pages == 0
