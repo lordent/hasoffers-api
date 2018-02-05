@@ -44,10 +44,11 @@ ERRORS = {
 
 class ApiRequest:
 
-    def __init__(self, url, params, auto_retry=False):
+    def __init__(self, url, params, proxy=None, auto_retry=False):
         self.url = url
         self.params = params or dict()
         self.auto_retry = auto_retry
+        self.proxy = proxy
 
     def __await__(self):
         return self.api_call(self.url + urlencode(self.params)).__await__()
@@ -64,8 +65,8 @@ class ApiRequest:
             yield await self
 
     async def api_call(self, url):
-        async with aiohttp.ClientSession(trust_env=True) as session:
-            async with session.get(url) as response:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, proxy=self.proxy) as response:
                 result = ujson.loads(await response.read())
 
         if 'response' in result:
@@ -99,7 +100,9 @@ class ApiMethod:
             Method=self.name,
             **(params or dict())
         )
-        return ApiRequest(url, params, auto_retry=auto_retry)
+        return ApiRequest(url, params,
+                          proxy=self.api_controller.api.proxy,
+                          auto_retry=auto_retry)
 
 
 class ApiController:
@@ -137,9 +140,10 @@ class Api:
       affiliate = await api.Affiliate.findById({'id': 1})
     """
 
-    def __init__(self, network, apikey):
+    def __init__(self, network, apikey, proxy=None):
         self.network = network
         self.apikey = apikey
+        self.proxy = proxy
 
     def __getattr__(self, api_controller_name):
         return ApiController(self, api_controller_name)

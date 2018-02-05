@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='hasoffers_api',
-    version='1.0.2',
+    version='1.0.3',
     description='Async HasOffers Network API driver',
     long_description='',
     author='Vitaliy Nefyodov',
